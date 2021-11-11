@@ -1,4 +1,26 @@
+import axios from "axios";
+import { ReactChild, ReactFragment, ReactPortal, useEffect, useState } from "react";
+import { SalePage } from "types/sale";
+import { formatLocalDate } from "utils/format";
+import { BASE_URL } from "utils/requests";
+
 const Datatable = () => {
+
+    const [page, SetPage] = useState<SalePage>({
+        first: true,
+        last: true,
+        number: 0,
+        totalElements: 0,
+        totalPages: 0
+    });
+
+    useEffect(() => {
+        axios.get(`${BASE_URL}/sales?page=1&size=20&sort=Date,desc`)
+            .then(response => {
+                SetPage(response.data);
+            });
+    },[]);
+
     return (
         <div className="table-responsive">
             <table className="table table-striped table-sm">
@@ -12,97 +34,15 @@ const Datatable = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>22/04/2021</td>
-                        <td>Barry Allen</td>
-                        <td>34</td>
-                        <td>25</td>
-                        <td>15017.00</td>
-                    </tr>
-                    <tr>
-                        <td>25/08/2021</td>
-                        <td>Jorge Bastos</td>
-                        <td>34</td>
-                        <td>25</td>
-                        <td>9800.00</td>
-                    </tr>
-                    <tr>
-                        <td>26/09/2021</td>
-                        <td>Beatriz Domingues</td>
-                        <td>34</td>
-                        <td>25</td>
-                        <td>1547.00</td>
-                    </tr>
-                    <tr>
-                        <td>22/04/2021</td>
-                        <td>Deise Peixoto</td>
-                        <td>34</td>
-                        <td>25</td>
-                        <td>2390.80</td>
-                    </tr>
-                    <tr>
-                        <td>25/08/2021</td>
-                        <td>Jorge Bastos</td>
-                        <td>34</td>
-                        <td>25</td>
-                        <td>9800.00</td>
-                    </tr>
-                    <tr>
-                        <td>25/08/2021</td>
-                        <td>Jorge Bastos</td>
-                        <td>34</td>
-                        <td>25</td>
-                        <td>9800.00</td>
-                    </tr>
-                    <tr>
-                        <td>25/08/2021</td>
-                        <td>Jorge Bastos</td>
-                        <td>34</td>
-                        <td>25</td>
-                        <td>9800.00</td>
-                    </tr>
-                    <tr>
-                        <td>25/08/2021</td>
-                        <td>Jorge Bastos</td>
-                        <td>34</td>
-                        <td>25</td>
-                        <td>9800.00</td>
-                    </tr>
-                    <tr>
-                        <td>25/08/2021</td>
-                        <td>Jorge Bastos</td>
-                        <td>34</td>
-                        <td>25</td>
-                        <td>9800.00</td>
-                    </tr>
-                    <tr>
-                        <td>25/08/2021</td>
-                        <td>Jorge Bastos</td>
-                        <td>34</td>
-                        <td>25</td>
-                        <td>9800.00</td>
-                    </tr>
-                    <tr>
-                        <td>25/08/2021</td>
-                        <td>Jorge Bastos</td>
-                        <td>34</td>
-                        <td>25</td>
-                        <td>9800.00</td>
-                    </tr>
-                    <tr>
-                        <td>25/08/2021</td>
-                        <td>Jorge Bastos</td>
-                        <td>34</td>
-                        <td>25</td>
-                        <td>9800.00</td>
-                    </tr>
-                    <tr>
-                        <td>25/08/2021</td>
-                        <td>Jorge Bastos</td>
-                        <td>34</td>
-                        <td>25</td>
-                        <td>9800.00</td>
-                    </tr>
+                    {page.content?.map(item => (
+                    <tr key={item.id}>
+                        <td>{formatLocalDate(item.date,"dd/MM/yyyy")}</td>
+                        <td>{item.seller.name}</td>
+                        <td>{item.visited}</td>
+                        <td>{item.deals}</td>
+                        <td>{item.amount.toFixed(2)}</td>
+                    </tr>  
+                    ))}
                 </tbody>
             </table>
         </div>
